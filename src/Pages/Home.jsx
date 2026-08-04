@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "../Styles/Home.css";
 import bgImage from "../assets/ai-interview-bg.png";
 
+
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -52,7 +53,7 @@ function Home() {
             ✨ AI Powered Interview Assistant
           </span>
 
-          <h1>AI Mock Interview</h1>
+          <h1>Smart Interview</h1>
 
           <p>
             Practice real interview questions with AI. Get resume-based

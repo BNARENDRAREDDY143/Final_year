@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { api } from "../services/api";
 import "../Styles/Login.css";
 import bgImage from "../assets/login-bg.jpg";
 
