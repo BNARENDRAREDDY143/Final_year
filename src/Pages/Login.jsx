@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { api } from "../services/api";
 import "../Styles/Login.css";
 import bgImage from "../assets/login-bg.jpg";
 
@@ -12,7 +13,7 @@ function Login() {
   const [message, setMessage] = useState("");
   const [type, setType] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     if (username.trim() === "" || password.trim() === "") {
@@ -21,12 +22,25 @@ function Login() {
       return;
     }
 
-    setMessage("✅ Login Successful!");
-    setType("success");
-
-    setTimeout(() => {
-      navigate("/dashboard");
-    }, 1000);
+    try {
+      const data = await api.login(username, password);
+      if (data.success) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        setMessage("✅ Login Successful!");
+        setType("success");
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1000);
+      } else {
+        setMessage(`❌ ${data.message}`);
+        setType("error");
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage("❌ Unable to connect to backend server.");
+      setType("error");
+    }
   };
 
   return (

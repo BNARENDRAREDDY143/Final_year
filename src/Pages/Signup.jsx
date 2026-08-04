@@ -1,43 +1,54 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { api } from "../services/api";
 import "../Styles/Signup.css";
 import bgImage from "../assets/login-bg.jpg";
 
 function Signup() {
+  const navigate = useNavigate();
 
-  const [username,setUsername]=useState("");
-  const [email,setEmail]=useState("");
-  const [password,setPassword]=useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [showPassword,setShowPassword]=useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [message,setMessage]=useState("");
-  const [type,setType]=useState("");
+  const [message, setMessage] = useState("");
+  const [type, setType] = useState("");
 
-  const handleSignup=(e)=>{
-
+  const handleSignup = async (e) => {
     e.preventDefault();
 
-    if(username==="" || email==="" || password===""){
+    if (username.trim() === "" || email.trim() === "" || password.trim() === "") {
       setMessage("Please fill all fields.");
       setType("error");
+      return;
     }
 
-    else{
+    try {
+      const data = await api.signup(username, email, password);
+      if (data.success) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        setMessage("🎉 Account Created Successfully!");
+        setType("success");
 
-      setMessage("🎉 Account Created Successfully!");
-      setType("success");
+        setUsername("");
+        setEmail("");
+        setPassword("");
 
-      setUsername("");
-      setEmail("");
-      setPassword("");
-
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1500);
+      } else {
+        setMessage(`❌ ${data.message}`);
+        setType("error");
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage("❌ Server error during registration.");
+      setType("error");
     }
-
-    setTimeout(()=>{
-      setMessage("");
-    },3000);
-
   };
 
   return(

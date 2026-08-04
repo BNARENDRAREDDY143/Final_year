@@ -1,19 +1,42 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../Styles/Dashboard.css";
 
 function Dashboard() {
   const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const userStr = localStorage.getItem("user");
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        if (user && user.username) {
+          setUsername(user.username);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }, []);
 
   const handleNavigation = (path) => {
     navigate(path);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
   };
 
   return (
     <div className="dashboard">
       <h1>AI Mock Interview Dashboard</h1>
 
-      <p>Welcome! Choose an interview module below.</p>
+      <p style={{ fontSize: "1.2rem", fontWeight: "500", color: "#374151" }}>
+        Welcome{username ? `, ${username}` : ""}! Choose an interview module below.
+      </p>
 
       <div className="feature-grid">
         <div className="feature-card">
@@ -118,9 +141,9 @@ function Dashboard() {
 
       <br />
 
-      <Link to="/" className="feature-btn">
+      <button onClick={handleLogout} className="feature-btn" style={{ background: "#EF4444", color: "#fff", cursor: "pointer", border: "none" }}>
         Logout
-      </Link>
+      </button>
     </div>
   );
 }
