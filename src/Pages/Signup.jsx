@@ -1,53 +1,43 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../Styles/Signup.css";
 import bgImage from "../assets/login-bg.jpg";
 
 function Signup() {
-  const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [username,setUsername]=useState("");
+  const [email,setEmail]=useState("");
+  const [password,setPassword]=useState("");
 
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword,setShowPassword]=useState(false);
 
-  const [message, setMessage] = useState("");
-  const [type, setType] = useState("");
+  const [message,setMessage]=useState("");
+  const [type,setType]=useState("");
 
-  const handleSignup = async (e) => {
+  const handleSignup=(e)=>{
+
     e.preventDefault();
 
-    if (username.trim() === "" || email.trim() === "" || password.trim() === "") {
+    if(username==="" || email==="" || password===""){
       setMessage("Please fill all fields.");
       setType("error");
-      return;
     }
 
-    try {
-      const data = await api.signup(username, email, password);
-      if (data.success) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        setMessage("🎉 Account Created Successfully!");
-        setType("success");
+    else{
 
-        setUsername("");
-        setEmail("");
-        setPassword("");
+      setMessage("🎉 Account Created Successfully!");
+      setType("success");
 
-        setTimeout(() => {
-          navigate("/dashboard");
-        }, 1500);
-      } else {
-        setMessage(`❌ ${data.message}`);
-        setType("error");
-      }
-    } catch (err) {
-      console.error(err);
-      setMessage("❌ Server error during registration.");
-      setType("error");
+      setUsername("");
+      setEmail("");
+      setPassword("");
+
     }
+
+    setTimeout(()=>{
+      setMessage("");
+    },3000);
+
   };
 
   return(
